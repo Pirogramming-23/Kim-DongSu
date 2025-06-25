@@ -111,13 +111,14 @@
         #header-hamburger:hover::before, #header-notice:hover::before, #header-naverpay:hover::before {
             position: absolute;
             content: '';
-            z-index: 0;
-            left: 1px;
-            top: 1px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
             width: 44px;
             height: 44px;
             background-color: var(--color_option_bg);
             border-radius: 50%;
+            z-index: 0;
         }
         #header-hamburger > div, #header-notice > div, #header-naverpay > div {
             background-image: url(./sp_main.png);
