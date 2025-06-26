@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" type="image/x-icon" href="./github_title_icon.png">
+    <title>Github</title>
+</head>
+<style>
+    html, body {
+        margin: 0;
+        padding: 0;
+    }
+    #upper_wrap {
+        background-color: #2b3137;
+        min-width: 1270.4px;
+        max-width: 1600px;
+        width: 1600px;
+        height: 600px;
+        position: relative;
+    }
+    header {
+        position: relative;
+        min-width: 1270.4px;
+    }
+
+    #header_container {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        min-width: 100%; /*1400px이었음*/
+        margin-left: 110px;
+        padding-top: 20px;
+    }
+
+    #left_group {
+        display: flex;
+        align-items: center;
+        gap: 25px;
+    }
+
+    #github-cat {
+        width: 35px;
+        height: 35px;
+        border-radius: 50%;
+        background-color: white;
+        left: 50px;
+        filter: invert(100%);
+    }
+
+    #menu_container {
+        display: flex;
+        width: 570px;
+        justify-content: space-between;
+    }
+
+    #menu_container .text, #menu_container .dropdown_text{
+        color: white;
+    }
+
+    #menu_container .dropdown_text {
+        display: flex;
+    }
+
+    #menu_container .dropdown_text > img {
+        width: 25px;
+        height: 25px;
+        filter: contrast(0%);
+        margin-top:1px;
+        cursor: pointer;
+    }
+
+
+    #right_group {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-right: 300px;
+    }
+
+    .search_wrapper {
+        position: relative;
+        width: 200px;
+        background-color: #464b50;
+        border-radius: 4px;
+    }
+
+    #search {
+        background-color: #464b50;
+        width: 150px;
+        border-radius: 4px;
+        padding: 6px 10px;
+        border: none;
+    }
+
+    #search::placeholder {
+        color: #ced0d1;
+    }
+
+    #search_btn {
+        position: relative;
+        right: -1px;
+        top: 50%;
+        width: 19px;
+        height: 19px;
+        border-radius: 4px;
+        border: 0.5px solid gray;
+        background-color: transparent;
+        color: gray;
+    }
+
+    #search_btn:hover {
+        background-color: white;
+    }
+
+    #sign_in {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+    }
+
+    #sign_in:hover{
+        text-decoration: underline;
+    }
+
+    #sign_up {
+        background-color: #2b3137;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 4px;
+        border: 1px solid #e9ebee;
+        cursor: pointer;
+    }
+    #sign_up:hover {
+        text-decoration: underline;
+        background-color: white;
+        color: black;
+    }
+
+
+    main {
+        min-width: 1270.4px;
+        position: relative;
+    }
+
+    #introduction {
+        display: flex;
+        position: relative;
+        left: 270px;
+        top: 50px;
+        flex-direction: column;
+        row-gap:18px;
+    }
+
+    #introduction_title {
+        width: 530px;
+        height: 200px;
+    }
+
+    #introduction_title > span {
+        position: relative;
+        font-size: 4.6rem;
+        color: white;
+        letter-spacing: -2px;
+        line-height: 70px;
+        top:60px;
+    }
+
+    #introduction_text {
+        position: relative;
+        width: 530px;
+        height: 200px;
+        word-spacing: 3px;
+        letter-spacing: 1px;
+        line-height: 20px;
+        color: gray;
+        left: 5px;
+        top: 5px;
+    }
+
+    #introduction_text .emphasis_text {
+        text-decoration: underline gray;
+        color: white;
+    }
+
+    #sign_up_box {
+        position: absolute;
+        width: 430px;
+        height: 490px;
+        background-color: white;
+        right: 310px;
+        top: 3px;
+        border-radius: 4px;
+    }
+
+    #sign_up_wrapper {
+        display: flex;
+        position: relative;
+        flex-flow: column;
+        align-items: center;
+        gap: 25px;
+        padding: 20px 15px 10px 15px;
+    }
+
+    .sign_up_input_wrapper {
+        display: flex;
+        flex-flow: column;
+        position: relative;
+        top: 15px;
+    }
+    .sign_up_text {
+        font-weight: bold;
+        font-size: small;
+    }
+    .sign_up_input {
+        position: relative;
+        top: 10px;
+        width: 390px;
+        height:35px;
+        border-radius: 4px;
+        border: 1px solid #e9ebee;
+        outline: none;
+    }
+    .sign_up_input:focus {
+        background-color: #e8f0fe;
+        border: 1px solid #e9ebee;
+        outline: none;
+    }
+    .sign_up_input:not(:placeholder-shown) {
+        background-color: #e8f0fe;
+        border: 1px solid #e9ebee;
+        outline: none;
+    }
+    #make_sure_text {
+        font-size: 0.73rem;
+        position: relative;
+        bottom: -15px;
+    }
+    #make_sure_text span a {
+        text-decoration: none;
+    }
+    #sign_up_button {
+        position: relative;
+        background-color: #2ebc4f;
+        border: none;
+        border-radius: 4px;
+        width: 390px;
+        height: 70px;
+        color: white;
+        font-weight: bold;
+        font-size: 1rem;
+        bottom: -10px;
+        cursor: pointer;
+    }
+    #agree_text {
+        position: relative;
+        font-size: x-small;
+        bottom: -20px;
+        color: gray;
+        font-size: 0.75rem;
+    }
+    #agree_text span a {
+        text-decoration: none;
+    }
+
+    footer {
+        position: relative;
+        width : 1270.4px;
+    }
+    footer > img {
+        width: 450px;
+        position: absolute;
+        right: -140px;
+        bottom: -145px;
+    }
+</style>
+<body>
+    <div id="wrap">
+        <section id="upper_wrap">
+            <header>
+                <div id="header_container">
+                    <div id="left_group">
+                        <img src="./github_title_icon.png" id="github-cat">
+                        <div id="menu_container">
+                            <div class="dropdown_text">
+                                Why GitHub?
+                                <img src="./arrow-down-s-line.png" id="dropdown_icon">
+                            </div>
+                            <div class="text">Team</div>
+                            <div class="text">Enterprise</div>
+                            <div class="dropdown_text">
+                                Explore
+                                <img src="./arrow-down-s-line.png" id="dropdown_icon">
+                            </div>
+                            <div class="text">Marketplace</div>
+                            <div class="dropdown_text">
+                                Pricing
+                                <img src="./arrow-down-s-line.png" id="dropdown_icon">
+                            </div>
+                        </div>
+                    </div>
+                    <div id="right_group">
+                        <div class="search_wrapper">
+                            <input id="search" placeholder="Search GitHub" />
+                            <button id="search_btn">/</button>
+                        </div>
+                        <a href="#" id="sign_in">Sign in</a>
+                        <button id="sign_up">Sign up</button>
+                    </div>
+                </div>
+            </header>
+            <main>
+                <div id="introduction">
+                    <article id="introduction_title">
+                        <span>Built for<br>developers</span>
+                    </article>
+                    <article id="introduction_text">
+                        GitHub is a development platform inspired by the<br>
+                        way you work. From <span class="emphasis_text">open source</span> to <span class="emphasis_text">business</span>, you<br>
+                        can host and review code, manage projects, and<br>
+                        build software alongside 50 million developers.
+                    </article>
+                </div>
+                <div id="sign_up_box">
+                    <div id="sign_up_wrapper">
+                        <div class="sign_up_input_wrapper">
+                            <div class="sign_up_text">Username</div>
+                            <input class="sign_up_input" placeholder="">
+                        </div>
+                        <div class="sign_up_input_wrapper">
+                            <div class="sign_up_text">Email</div>
+                            <input class="sign_up_input" placeholder="">
+                        </div>
+                        <div class="sign_up_input_wrapper">
+                            <div class="sign_up_text">Password</div>
+                            <input class="sign_up_input" placeholder="">
+                        </div>
+                        <div id="make_sure_text">
+                            Make sure it's at least 15 characters OR at least 8 characters including a<br>
+                            number and a lowercase letter. <span><a href="#">Learn more.</a></span>
+                        </div>
+                        <button id="sign_up_button">Sign up for GitHub</button>
+                        <div id="agree_text">
+                            By clicking "Sign up for GitHub", you agree to our <span><a href="#">Terms of Service</a></span> and<br>
+                            <span><a href="#">Privacy Statement</a></span>. We'll occasionally send you account related emails.
+                        </div>
+                    </div>
+                </div>
+            </main>
+        </section>
+        <footer>
+            <img src="./footer.png">
+        </footer>
+    </div>
+</body>
+</html>
