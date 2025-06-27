@@ -66,10 +66,13 @@ main {
     margin-bottom: 16px;
     align-items: center;
 }
-
+#main_header > div {
+    flex: 1
+}
 #main_header > span {
     color: white;
     font-size: 24px;
+    flex: 1;
 }
 #main_header > a {
     color:white;
