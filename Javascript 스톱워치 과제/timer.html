@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="./style.css" rel="stylesheet">
+    <title>피로그래밍 스톱워치</title>
+</head>
+<body>
+    <h3>⏱ 피로그래밍 스톱워치</h3>
+    <div class="timer">
+        <div id="timer-display">00:00</div>
+        <div class="timer-bottom">
+            <button id="start-button" class="timer-btn">start</button>
+            <button id="stop-button" class="timer-btn">stop</button>
+            <button id="reset-button" class="timer-btn">reset</button>
+            <button id="toggle-mode-btn" class="timer-btn">타이머</button>
+        </div>
+    </div>
+    <div class="interval-container">
+        <div class="interval-header">
+            <input type="checkbox" id="all-select-btn" class="select-interval">
+            <span>구간 기록</span>
+            <span id="trash">🗑️</span>
+        </div>
+    </div>
+</body>
+<script src="./script.js" defer></script>
+</html>
