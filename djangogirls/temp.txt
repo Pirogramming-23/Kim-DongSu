@@ -1,1 +1,1 @@
-djangogirls 1강 커밋용 파일입니다!
+djangogirls 설치하기 커밋용 파일입니다!
