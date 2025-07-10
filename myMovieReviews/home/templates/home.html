@@ -1,0 +1,115 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="home_style.css" rel="stylesheet"/>
+    <title>My Movie reviews</title>
+</head>
+<style>
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:visited {
+        text-decoration: none;
+        color: black;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 10px 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-bottom: 2px solid lightgray;
+    }
+
+    .review-container {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
+        padding: 50px 100px 0 100px;
+        gap: 40px;
+    }
+
+    .review {
+        display: flex;
+        flex-flow: column;
+        justify-content: center;
+        align-items: flex-start;
+        gap: 15px;
+        background-color: #f2f2f2;
+        padding: 20px 40px 20px;
+    }
+
+    .review-img-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+    }
+
+    .review-img-container > img {
+        object-fit: contain;
+        width: 100%;
+        height: 100%;
+    }
+
+    .title {
+        font-size: 25px;
+        font-weight: bolder;
+    }
+
+    .content-before {
+        color: gray;
+    }
+</style>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" style="font-size: 20px;">my
+                <span style="color:red; font-weight:bold;">
+                    Movie
+                </span>
+            reviews</a>
+            <a href="/create/">Add a New review</a>
+        </div>
+    </header>
+    <div style="padding: 20px 100px;">
+        정렬 기준:
+        <a href="?sort=title" {% if current_sort == 'title' %}style="font-weight:bold;"{% endif %}>제목 ↑</a> |
+        <a href="?sort=-title" {% if current_sort == '-title' %}style="font-weight:bold;"{% endif %}>제목 ↓</a> |
+        <a href="?sort=score" {% if current_sort == 'score' %}style="font-weight:bold;"{% endif %}>별점 ↑</a> |
+        <a href="?sort=-score" {% if current_sort == '-score' %}style="font-weight:bold;"{% endif %}>별점 ↓</a> |
+        <a href="?sort=running_time" {% if current_sort == 'running_time' %}style="font-weight:bold;"{% endif %}>상영시간 ↑</a> |
+        <a href="?sort=-running_time" {% if current_sort == '-running_time' %}style="font-weight:bold;"{% endif %}>상영시간 ↓</a>
+    </div>
+    <div class="review-container">
+        {% for review in reviews %}
+            <div class="review">
+                <div class="review-img-container">
+                    <img src="https://is1-ssl.mzstatic.com/image/thumb/Purple126/v4/87/52/d0/8752d04a-f19b-0692-e27d-b516efc2daa8/AppIcon-0-0-1x_U007emarketing-0-5-0-85-220.png/512x512bb.jpg" alt="영화 이미지"/>
+                </div>
+                <a href="/{{review.id}}" class="title">{{review.title}}</a>
+                <div class="content-container">
+                    <span class="content-before">개봉년도</span>
+                    <span class="content-after">{{review.launch_year}}년</span>
+                </div>
+                <div class="content-container">
+                    <span class="content-before">장르</span>
+                    <span class="content-after">{{review.genre}}</span>
+                </div>
+                <div class="content-container">
+                    <span class="content-before">별점</span>
+                    <span class="content-after">{{review.score}}</span>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+</body>
+</html>
