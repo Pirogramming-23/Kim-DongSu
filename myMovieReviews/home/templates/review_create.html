@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Movie Review Form</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        padding: 20px;
+    }
+
+    a {
+        text-decoration: none;
+        color: black;
+    }
+
+    a:visited {
+        text-decoration: none;
+        color: black;
+    }
+
+    h1 {
+        text-align: center;
+        font-weight: 700;
+        margin-bottom: 10px;
+    }
+    hr {
+        border: none;
+        border-top: 1px solid #ccc;
+        margin-bottom: 20px;
+    }
+
+    .header-container {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 20px 10px 20px;
+        margin-left: 10px;
+        margin-right: 10px;
+        border-bottom: 2px solid lightgray;
+        margin-bottom: 20px;
+    }
+
+    .container {
+        max-width: 400px;
+        margin: 0 auto;
+        background-color: #f2f2f2;
+        padding: 10px 100px 20px 100px;
+    }
+
+    form {
+        display: flex;
+        flex-flow: column;
+        gap: 20px;
+    }
+
+    .input-container {
+        display: flex;
+        align-items: center;
+        gap : 10px;
+    }
+
+    .input-container > label {
+        font-weight: bold;
+    }
+
+    form > .input-container:nth-child(7) {
+        flex-flow: column;
+        justify-content: flex-start;
+        align-items: flex-start;
+    }
+
+    #review {
+        width: 100%;
+        height: 100px;
+    }
+
+    button {
+        position: relative;
+        margin-top: 20px;
+        width: 55px;
+        height: 30px;
+        left: 400px;
+        background-color: white;
+        border: 1px solid lightgray;
+        border-radius: 5px;
+    }
+
+    button:hover {
+        filter: brightness(90%);
+    }
+</style>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <a href="/" style="font-size: 20px;">my
+                <span style="color:red; font-weight:bold;">
+                    Movie
+                </span>
+            reviews</a>
+            <a href="">Add a New review</a>
+        </div>
+    </header>
+    <div class="container">
+        <h1>Movie <span style="color:#e60039;">review</span>🍿</h1>
+        <hr />
+        <form action="/create/" method="post">
+            {% csrf_token %}
+            <div class="input-container">
+                <label for="title">제목:</label>
+                <input type="text" id="title" name="title" />
+            </div>
+            <div class="input-container">
+                <label for="year">개봉년도:</label>
+                <input type="number" id="year" name="year" />
+            </div>
+            <div class="input-container">
+                <label for="genre">장르:</label>
+                <select id="genre" name="genre">
+                    <option value="">---------</option>
+                    <option value="SF">SF</option>
+                    <option value="Comedy">Comedy</option>
+                    <option value="Action">Action</option>
+                    <option value="Romance">Romance</option>
+                    <option value="Thriller">Thriller</option>
+                </select>
+            </div>
+            <div class="input-container">
+                <label for="score">별점:</label>
+                <input type="number" id="score" name="score" min="0" max="10" step="0.1" />
+            </div>
+            <div class="input-container">
+                <label for="running_time">러닝타임:</label>
+                <input type="text" id="running_time" name="running_time" />
+            </div>
+            <div class="input-container">
+                <label for="review">리뷰:</label>
+                <textarea id="review" name="review"></textarea>
+            </div>
+            <div class="input-container">
+                <label for="director">감독:</label>
+                <input type="text" id="director" name="director" />
+            </div>
+            <div class="input-container">
+                <label for="actor">배우:</label>
+                <input type="text" id="actor" name="actor" />
+            </div>
+            <button type="submit">Save</button>
+        </form>
+    </div>
+</body>
+</html>
