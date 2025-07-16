@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<span class="title">Idea Detail</span>
+<span class="little-title">아이디어 세부내용 페이지 입니다. 당신이 구현하려 한 아이디어들을 자세히 살펴보세요.</span>
+<div class="idea-detail-wrapper">
+    <div class="idea-detail-left">
+        {% if idea.image and idea.image.url %}
+            <img src="{{ idea.image.url }}" alt="아이디어 이미지">
+        {% else %}
+            <img src="{% static 'images/basic_img.png' %}" alt="기본 이미지">
+        {% endif %}
+    </div>
+    <div class="idea-detail-right">
+        <div class="idea-detail-container">
+            <span class="idea-detail-title">{{idea.title}}</span>
+            {% if user.is_authenticated %}
+                {% if is_starred %}
+                    <button class="star-detail" data-idea-id="{{ idea.id }}">⭐</button>
+                {% else %}
+                    <button class="star-detail" data-idea-id="{{ idea.id }}">★</button>
+                {% endif %}
+            {% else %}
+                <button class="star-detail" data-idea-id="{{ idea.id }}" title="로그인이 필요합니다">★</button>
+            {% endif %}
+        </div>
+        <div class="idea-detail-container">
+            <span class="idea-detail-content")> 1) 아이디어 관심도</span>
+            <span class="idea-detail-value">{{idea.interest}}</span>
+        </div>
+        <div class="idea-detail-container">
+            <span class="idea-detail-content">2) 예상 개발 툴</span>
+            <span class="idea-detail-value">
+                <a href="{% url 'Devtool:devtool_detail' idea.devtool.id %}">
+                    {{ idea.devtool.name }}
+                </a>
+            </span>
+        </div>
+        <div class="idea-detail-container">
+            <span class="idea-detail-content">3) 아이디어 설명</span>
+            <span class="idea-detail-value">{{idea.content}}</span>
+        </div>
+    </div>
+</div>
+<div class="detail-btns-container">
+    <form method="post" action="{% url 'Idea:idea_delete' idea.id %}" style="display:inline;">
+        {% csrf_token %}
+        <button type="submit" class="idea-delete-btn" onclick="return confirm('정말 삭제하시겠습니까?')">
+            삭제
+        </button>
+    </form>
+    <button class="idea-list-btn" onclick="location.href='/'">목록</button>
+    <button class="idea-update-btn" onclick="location.href='/idea/update/{{idea.id}}'">수정</button>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const starButton = document.querySelector('.star-detail');
+    if (starButton && starButton.dataset.ideaId) {
+        starButton.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/idea/${ideaId}/star/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    alert('로그인이 필요한 기능입니다.');
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(`서버 오류: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    starButton.textContent = data.is_starred ? '⭐' : '☆';
+                }
+            })
+            .catch(error => {
+                alert('에러가 발생했습니다: ' + error.message);
+            });
+        });
+    }
+});
+</script>
+{% endblock %}

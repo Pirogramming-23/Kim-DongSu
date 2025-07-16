@@ -1,0 +1,40 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="csrf-token" content="{{ csrf_token }}">
+    <link rel="stylesheet" href="{% static 'css/reset.css' %}">
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <title>SWIDEA_SITE</title>
+</head>
+<body>
+    <nav>
+        <div class="left-nav">
+            <a href="/" style="color:white; font-weight: bold;">My <span style="color: lightgreen; font-weight: bold;">SW Idea</span> Manage</a>
+        </div>
+        <div class="right-nav">
+            <a href="{% url 'Idea:idea_create' %}" class="nav-link">아이디어 등록</a>
+            <a href="{% url 'Idea:idea_list' %}" class="nav-link">아이디어 관리</a>
+            <a href="{% url 'Devtool:devtool_create' %}" class="nav-link">개발툴 등록</a>
+            <a href="{% url 'Devtool:devtool_list' %}" class="nav-link">개발툴 관리</a>
+            {% if user.is_authenticated %}
+                <span class="welcome-span">{{ user.username }}님 환영합니다!</span>
+                <form action="{% url 'logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" style="cursor:pointer;" class="logout-btn">
+                        로그아웃
+                    </button>
+                </form>
+            {% else %}
+                <a href="{% url 'login' %}">로그인</a>
+                <a href="{% url 'Idea:signup' %}">회원가입</a>
+            {% endif %}
+        </div>
+    </nav>
+    <div class="container">
+        {% block content %} {% endblock %}
+    </div>
+</body>
+</html>
