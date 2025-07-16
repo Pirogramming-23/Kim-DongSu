@@ -1,99 +1,6 @@
 {% extends 'base.html' %}
 {% load static %}
 {% block content %}
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-
-    const starButtons = document.querySelectorAll('.star');
-    
-    starButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const ideaId = this.dataset.ideaId;
-            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-
-            fetch(`/idea/${ideaId}/star/`, {
-                method: 'POST',
-                headers: {
-                    'X-CSRFToken': csrftoken,
-                },
-            })
-            .then(response => {
-                if (response.status === 403) {
-                    // 로그인 안 한 경우
-                    alert('로그인이 필요한 기능입니다.');
-                    return;
-                }
-                if (!response.ok) {
-                    throw new Error(`서버 오류: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(data => {
-                if (data) {
-                    button.textContent = data.is_starred ? '⭐' : '★ ';
-                }
-            })
-            .catch(error => {
-                alert('에러가 발생했습니다: ' + error.message);
-            });
-
-        });
-    });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-
-    // 모든 + 버튼
-    const plusButtons = document.querySelectorAll('.plus-btn');
-    plusButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const ideaId = this.dataset.ideaId;
-            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            fetch(`/idea/${ideaId}/increase_interest/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-                body: ''
-            })
-            .then(response => response.json())
-            .then(data => {
-                // 해당 버튼의 부모에서 interest-count 찾아 업데이트
-                const container = this.closest('.interest-container');
-                container.querySelector('.interest-count').textContent = data.interest;
-            })
-            .catch(error => alert('에러: ' + error));
-        });
-    });
-
-    // 모든 - 버튼
-    const minusButtons = document.querySelectorAll('.minus-btn');
-    minusButtons.forEach(function(button) {
-        button.addEventListener('click', function() {
-            const ideaId = this.dataset.ideaId;
-            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
-            
-            fetch(`/idea/${ideaId}/decrease_interest/`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRFToken': csrftoken
-                },
-                body: ''
-            })
-            .then(response => response.json())
-            .then(data => {
-                const container = this.closest('.interest-container');
-                container.querySelector('.interest-count').textContent = data.interest;
-            })
-            .catch(error => alert('에러: ' + error));
-        });
-    });
-
-});
-</script>
 <span class="title">Idea List</span>
 <span class="little-title">나의 아이디어를 잊지 말고 기록해보세요</span>
 <form method="get" id="sortForm">
@@ -105,39 +12,11 @@ document.addEventListener('DOMContentLoaded', function() {
     </select>
     <button type="submit" class="sort-btn">정렬하기</button>
 </form>
-<div class="idea-list-container">
-    {% for idea in page_obj.object_list %}
-        <div class="idea-card">
-            <div class="idea-card-img-container">
-                {% if idea.image and idea.image.url %}
-                    <img src="{{ idea.image.url }}" alt="아이디어 이미지">
-                {% else %}
-                    <img src="{% static 'images/basic_img.png' %}" alt="기본 이미지">
-                {% endif %}
+<input type="text" id="searchInput" placeholder="검색어를 입력하세요" />
+<button id="searchBtn">검색</button>
 
-                {% if user.is_authenticated %}
-                    {% if idea.id in starred_idea_ids %}
-                        <button class="star" data-idea-id="{{ idea.id }}">⭐</button>
-                    {% else %}
-                        <button class="star" data-idea-id="{{ idea.id }}">★ </button>
-                    {% endif %}
-                {% else %}
-                    <button class="star" data-idea-id="{{ idea.id }}" title="로그인이 필요합니다">★</button>
-                {% endif %}
-            </div>
-            <div class="idea-card-bottom">
-                <a href="{% url 'Idea:idea_detail' idea.pk %}" class="idea-card-title">{{ idea.title }}</a>
-                <div class="idea-card-bar"></div>
-                <span class="idea-card-devtool">예상 개발 툴 : {{ idea.devtool }}</span>
-                <div class="interest-container">
-                    <span>아이디어 관심도 : </span>
-                    <button class="plus-btn" data-idea-id="{{ idea.id }}">+</button>
-                    <span class="interest-count">{{ idea.interest }}</span>
-                    <button class="minus-btn" data-idea-id="{{ idea.id }}">-</button>
-                </div>
-            </div>
-        </div>
-    {% endfor %}
+<div id="ideaListContainer">
+    {% include 'partials/idea_list_items.html' with ideas=page_obj.object_list %}
 </div>
 <div class="pagination">
     <span class="step-links">
@@ -174,4 +53,113 @@ document.addEventListener('DOMContentLoaded', function() {
         {% endif %}
     </span>
 </div>
+<script>
+    function attachStarEvents() {
+    const starButtons = document.querySelectorAll('.star');
+    
+    starButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/idea/${ideaId}/star/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    alert('로그인이 필요한 기능입니다.');
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(`서버 오류: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    button.textContent = data.is_starred ? '⭐' : '★';
+                }
+            })
+            .catch(error => {
+                alert('에러가 발생했습니다: ' + error.message);
+            });
+        });
+    });
+}
+
+function attachInterestEvents() {
+    // 모든 + 버튼
+    const plusButtons = document.querySelectorAll('.plus-btn');
+    plusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            fetch(`/idea/${ideaId}/increase_interest/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: ''
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = this.closest('.interest-container');
+                container.querySelector('.interest-count').textContent = data.interest;
+            })
+            .catch(error => alert('에러: ' + error));
+        });
+    });
+
+    // 모든 - 버튼
+    const minusButtons = document.querySelectorAll('.minus-btn');
+    minusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            fetch(`/idea/${ideaId}/decrease_interest/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: ''
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = this.closest('.interest-container');
+                container.querySelector('.interest-count').textContent = data.interest;
+            })
+            .catch(error => alert('에러: ' + error));
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    attachStarEvents();
+    attachInterestEvents();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const ideaListContainer = document.getElementById('ideaListContainer');
+
+    searchBtn.addEventListener('click', function() {
+        const query = searchInput.value;
+        fetch(`/search/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                ideaListContainer.innerHTML = data.html;
+                attachStarEvents(); // 혹시 찜 버튼 이벤트 다시 붙여야 하면
+                attachInterestEvents();
+            });
+    });
+});
+</script>
 {% endblock %}

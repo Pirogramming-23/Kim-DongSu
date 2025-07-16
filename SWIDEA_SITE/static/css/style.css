@@ -664,3 +664,18 @@ nav a:hover {
     margin-bottom: 20px;
     font-weight: bold;
 }
+
+#searchBtn {
+    margin-top: 5px;
+    width: 45px;
+    font-size: 15px;
+    font-weight: bold;
+    border-radius: 5px;
+    padding: 2px 5px 2px 5px;
+    transition: 0.2s ease;
+}
+
+#searchBtn:hover {
+    background-color: black;
+    color: white;
+}

@@ -128,8 +128,20 @@ def idea_search(request):
     ideas = Idea.objects.all()
     if query:
         ideas = ideas.filter(title__icontains=query)
-    
-    # 기존 페이징이나 정렬이 필요하면 여기서 추가로 처리해도 됩니다.
 
-    html = render_to_string('idea/partials/idea_list_items.html', {'ideas': ideas, 'user': request.user})
+    starred_ids = []
+    if request.user.is_authenticated:
+        starred_ids = list(
+            IdeaStar.objects.filter(user=request.user).values_list('idea_id', flat=True)
+        )
+
+    html = render_to_string(
+        'partials/idea_list_items.html',
+        {
+            'ideas': ideas,
+            'user': request.user,
+            'starred_idea_ids': starred_ids
+        },
+        request=request
+    )
     return JsonResponse({'html': html})
