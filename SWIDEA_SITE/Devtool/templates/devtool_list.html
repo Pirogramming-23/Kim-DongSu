@@ -1,0 +1,42 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="devtool-list-container">
+    {% for devtool in page_obj.object_list %}
+    <div class="devtool-row">
+        <a href="{% url 'Devtool:devtool_detail' devtool.id %}" class="devtool-name">{{ devtool.name }}</a>
+        <span class="devtool-kind">{{ devtool.kind }}</span>
+        <span class="devtool-content">{{ devtool.content }}</span>
+    </div>
+    {% empty %}
+    <p>등록된 개발툴이 없습니다.</p>
+    {% endfor %}
+</div>
+
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; 처음으로</a>
+            <a href="?page={{ page_obj.previous_page_number }}">&lt;</a>
+        {% else %}
+            <span class="disabled">&laquo; 처음으로</span>
+            <span class="disabled">&lt;</span>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">&gt;</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">마지막 &raquo;</a>
+        {% else %}
+            <span class="disabled">&gt;</span>
+            <span class="disabled">마지막 &raquo;</span>
+        {% endif %}
+    </span>
+</div>
+{% endblock %}

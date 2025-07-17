@@ -1,0 +1,165 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block content %}
+<span class="title">Idea List</span>
+<span class="little-title">나의 아이디어를 잊지 말고 기록해보세요</span>
+<form method="get" id="sortForm">
+    <select name="order_by" id="order_by">
+        <option value="" disabled selected hidden>-- 정렬 기준 --</option>
+        <option value="star_count" {% if request.GET.order_by == 'star_count' %}selected{% endif %}>찜 개수순</option>
+        <option value="title" {% if request.GET.order_by == 'title' %}selected{% endif %}>제목순</option>
+        <option value="interest" {% if request.GET.order_by == 'interest' %}selected{% endif %}>관심도순</option>
+    </select>
+    <button type="submit" class="sort-btn">정렬하기</button>
+</form>
+<input type="text" id="searchInput" placeholder="검색어를 입력하세요" />
+<button id="searchBtn">검색</button>
+
+<div id="ideaListContainer">
+    {% include 'partials/idea_list_items.html' with ideas=page_obj.object_list %}
+</div>
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+        <a href="?page=1{% if order_by %}&order_by={{ order_by }}{% endif %}">처음으로</a>
+        {% else %}
+        <span class="disabled">처음으로</span>
+        {% endif %}
+
+        {% if page_obj.has_previous %}
+        <a href="?page={{ page_obj.previous_page_number }}{% if order_by %}&order_by={{ order_by }}{% endif %}">&lt;</a>
+        {% else %}
+        <span class="disabled">&lt;</span>
+        {% endif %}
+
+        {% for num in page_obj.paginator.page_range %}
+            {% if num == page_obj.number %}
+                <span class="current">{{ num }}</span>
+            {% else %}
+                <a href="?page={{ num }}{% if order_by %}&order_by={{ order_by }}{% endif %}">{{ num }}</a>
+            {% endif %}
+        {% endfor %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.next_page_number }}{% if order_by %}&order_by={{ order_by }}{% endif %}">&gt;</a>
+        {% else %}
+        <span class="disabled">&gt;</span>
+        {% endif %}
+
+        {% if page_obj.has_next %}
+        <a href="?page={{ page_obj.paginator.num_pages }}{% if order_by %}&order_by={{ order_by }}{% endif %}">마지막으로</a>
+        {% else %}
+        <span class="disabled">마지막으로</span>
+        {% endif %}
+    </span>
+</div>
+<script>
+    function attachStarEvents() {
+    const starButtons = document.querySelectorAll('.star');
+    
+    starButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+
+            fetch(`/idea/${ideaId}/star/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken,
+                },
+            })
+            .then(response => {
+                if (response.status === 403) {
+                    alert('로그인이 필요한 기능입니다.');
+                    return;
+                }
+                if (!response.ok) {
+                    throw new Error(`서버 오류: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data) {
+                    button.textContent = data.is_starred ? '⭐' : '★';
+                }
+            })
+            .catch(error => {
+                alert('에러가 발생했습니다: ' + error.message);
+            });
+        });
+    });
+}
+
+function attachInterestEvents() {
+    // 모든 + 버튼
+    const plusButtons = document.querySelectorAll('.plus-btn');
+    plusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            fetch(`/idea/${ideaId}/increase_interest/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: ''
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = this.closest('.interest-container');
+                container.querySelector('.interest-count').textContent = data.interest;
+            })
+            .catch(error => alert('에러: ' + error));
+        });
+    });
+
+    // 모든 - 버튼
+    const minusButtons = document.querySelectorAll('.minus-btn');
+    minusButtons.forEach(function(button) {
+        button.addEventListener('click', function() {
+            const ideaId = this.dataset.ideaId;
+            const csrftoken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
+            
+            fetch(`/idea/${ideaId}/decrease_interest/`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrftoken
+                },
+                body: ''
+            })
+            .then(response => response.json())
+            .then(data => {
+                const container = this.closest('.interest-container');
+                container.querySelector('.interest-count').textContent = data.interest;
+            })
+            .catch(error => alert('에러: ' + error));
+        });
+    });
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    attachStarEvents();
+    attachInterestEvents();
+});
+
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('searchInput');
+    const searchBtn = document.getElementById('searchBtn');
+    const ideaListContainer = document.getElementById('ideaListContainer');
+
+    searchBtn.addEventListener('click', function() {
+        const query = searchInput.value;
+        fetch(`/search/?q=${encodeURIComponent(query)}`)
+            .then(response => response.json())
+            .then(data => {
+                ideaListContainer.innerHTML = data.html;
+                attachStarEvents(); // 혹시 찜 버튼 이벤트 다시 붙여야 하면
+                attachInterestEvents();
+            });
+    });
+});
+</script>
+{% endblock %}

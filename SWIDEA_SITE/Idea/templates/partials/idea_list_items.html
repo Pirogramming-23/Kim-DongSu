@@ -1,0 +1,37 @@
+{% load static %}
+<div class="idea-list-container">
+    {% for idea in ideas %}
+        <div class="idea-card">
+            <div class="idea-card-img-container">
+                {% if idea.image and idea.image.url %}
+                    <img src="{{ idea.image.url }}" alt="아이디어 이미지">
+                {% else %}
+                    <img src="{% static 'images/basic_img.png' %}" alt="기본 이미지">
+                {% endif %}
+
+                {% if user.is_authenticated %}
+                    {% if idea.id in starred_idea_ids %}
+                        <button class="star" data-idea-id="{{ idea.id }}">⭐</button>
+                    {% else %}
+                        <button class="star" data-idea-id="{{ idea.id }}">★ </button>
+                    {% endif %}
+                {% else %}
+                    <button class="star" data-idea-id="{{ idea.id }}" title="로그인이 필요합니다">★</button>
+                {% endif %}
+            </div>
+            <div class="idea-card-bottom">
+                <a href="{% url 'Idea:idea_detail' idea.pk %}" class="idea-card-title">{{ idea.title }}</a>
+                <div class="idea-card-bar"></div>
+                <span class="idea-card-devtool">예상 개발 툴 : {{ idea.devtool }}</span>
+                <div class="interest-container">
+                    <span>아이디어 관심도 : </span>
+                    <button class="plus-btn" data-idea-id="{{ idea.id }}">+</button>
+                    <span class="interest-count">{{ idea.interest }}</span>
+                    <button class="minus-btn" data-idea-id="{{ idea.id }}">-</button>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <p>검색 결과가 없습니다.</p>
+    {% endfor %}
+</div>

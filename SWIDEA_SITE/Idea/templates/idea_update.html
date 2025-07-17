@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+{% block content %}
+<span class="title">Idea Detail Update</span>
+<span class="little-title">아이디어 세부내용 수정페이지 입니다. 아이디어를 구체화하거나 내용을 변경해 보세요.</span>
+
+<form method="post" enctype="multipart/form-data" id="idea-update-form">
+    {% csrf_token %}
+    <span class="idea-update-form-title">Idea Update</span>
+    {{ form.as_p }}
+    <button type="submit" class="update-sumbit-btn">SUBMIT</button>
+</form>
+{% endblock %}
