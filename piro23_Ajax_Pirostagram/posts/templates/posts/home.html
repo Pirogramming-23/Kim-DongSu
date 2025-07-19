@@ -1,0 +1,198 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'posts/home.css' %}">
+    <title>Pirostagram</title>
+</head>
+<body>
+    <nav class="sidebar">
+        <ul>
+            <div class="homelink-container">
+                <a href="{% url 'home' %}" class="homelink">Pirostagram</a>
+            </div>
+            <div class="navitem-container">
+                <div><a href="#">🏠&nbsp;&nbsp;&nbsp;홈</a></div>
+                <div><a href="#">🔍&nbsp;&nbsp;&nbsp;검색</a></div>
+                <div><a href="#">✉️&nbsp;&nbsp;&nbsp;메시지</a></div>
+                <div><a href="#">♥️&nbsp;&nbsp;&nbsp;알림</a></div>
+                <div><a href="#">➕&nbsp;&nbsp;&nbsp;만들기</a></div>
+                <div class="profileNavMenu">
+                    <div class="navprofile-container">
+                        {% if request.user.profile_image.name %}
+                            <img src="{{ request.user.profile_image.url }}" alt="프로필" class="nav-profile-image">
+                        {% else %}
+                            <img src="{% static 'images/default-profile.png' %}" alt="기본 프로필" class="nav-profile-image">
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'profile' user.username %}">프로필</a>
+                </div>
+            </div>
+        </ul>
+    </nav>
+    <main class="content">
+        <!--content-left는 스토리와 게시글이 전시될 공간-->
+        <section class="content-left">
+            <div class="story-container">
+                {% for story in stories %}
+                    <div class="story-item-container">
+                    <div class="story-img-container">
+                        <img
+                        src="{% if story.user.profile_image.name %}{{ story.user.profile_image.url }}{% else %}{% static 'images/default-profile.png' %}{% endif %}"
+                        class="story-item"
+                        data-username="{{ story.user.username }}"
+                        onclick="openStoryModal(this)"
+                        >
+                    </div>
+                    <span>{{ story.user.username }}</span>
+                    </div>
+                {% endfor %}
+            </div>
+            <h1>게시물</h1>
+            <p>여기에 게시물이 스크롤됩니다...</p>
+        </section>
+
+        <!--여기부터 피드의 오른쪽 (프로필이 나열될 공간)-->
+        <div class="content-right">
+            <div class="profile-container">
+                <div class="profile-img-container">
+                    {% if request.user.profile_image.name %}
+                        <img src="{{ request.user.profile_image.url }}" class="story-item">
+                    {% else %}
+                        <img src="{% static 'images/default-profile.png' %}" class="story-item">
+                    {% endif %}
+                </div>
+                <div class="profile-context">
+                    <div class="profile-context-left">
+                        <a href="{% url 'profile' user.username %}" class="profile-username">{{request.user.username}}</a>
+                        <span class="profile-name">{{request.user.last_name}}{{request.user.first_name}}</span>
+                    </div>
+                    <div class="profile-context-right">
+                        <a href="{% url 'login' %}" class="account-change-link">전환</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="storyModal" class="modal" style="display:none;">
+        <div class="modal-content">
+            <span class="close" onclick="closeStoryModal()">&times;</span>
+
+            <div class="story-slider">
+            <button id="prevBtn" onclick="prevSlide()">&#10094;</button>
+            <img id="slideImage" src="" alt="스토리" class="story-slide-image">
+            <button id="nextBtn" onclick="nextSlide()">&#10095;</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+<style>
+.modal {
+  position: fixed;
+  z-index: 1000;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background-color: rgba(0,0,0,0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  position: relative;
+}
+.story-slide-image {
+  max-width: 300px;
+  max-height: 400px;
+  margin: 20px;
+}
+button#prevBtn, button#nextBtn {
+  background: none;
+  border: none;
+  font-size: 40px;
+  cursor: pointer;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+}
+#prevBtn { left: 10px; }
+#nextBtn { right: 10px; }
+.close {
+  position: absolute;
+  top: 20px;
+  right: 30px;
+  font-size: 30px;
+  cursor: pointer;
+}
+</style>
+
+
+<script>
+let currentSlideIndex = 0;
+let currentSlideImages = [];
+let autoSlideTimer = null;
+
+function openStoryModal(el) {
+    const username = el.dataset.username;
+    fetch(`/stories/${username}/json/`)
+        .then(res => res.json())
+        .then(data => {
+            if (data.images.length === 0) return;
+
+            currentSlideImages = data.images;
+            currentSlideIndex = 0;
+
+            showSlide(currentSlideIndex);
+            document.getElementById('storyModal').style.display = 'flex';
+
+            startAutoSlide();
+        });
+}
+
+function showSlide(index) {
+    const imgEl = document.getElementById('slideImage');
+    imgEl.src = currentSlideImages[index];
+}
+
+function nextSlide() {
+    currentSlideIndex = (currentSlideIndex + 1) % currentSlideImages.length;
+    showSlide(currentSlideIndex);
+    restartAutoSlide();
+}
+
+function prevSlide() {
+    currentSlideIndex = (currentSlideIndex - 1 + currentSlideImages.length) % currentSlideImages.length;
+    showSlide(currentSlideIndex);
+    restartAutoSlide();
+}
+
+function closeStoryModal() {
+    document.getElementById('storyModal').style.display = 'none';
+    stopAutoSlide();
+}
+
+function startAutoSlide() {
+    stopAutoSlide();
+    autoSlideTimer = setInterval(() => {
+        nextSlide();
+    }, 3000);  // 3초마다 자동 슬라이드
+}
+
+function stopAutoSlide() {
+    if (autoSlideTimer) clearInterval(autoSlideTimer);
+}
+
+function restartAutoSlide() {
+    stopAutoSlide();
+    startAutoSlide();
+}
+</script>
+
+</html>

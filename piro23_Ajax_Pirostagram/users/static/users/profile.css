@@ -1,0 +1,202 @@
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh; /* 전체 높이 고정 */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    border-right: 1px solid lightgray;
+}
+
+.sidebar> ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-flow: column;
+    gap: 30px;
+}
+
+.homelink {
+    background: linear-gradient(90deg, yellowgreen, lightgreen);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.navitem-container {
+    display: flex;
+    flex-flow: column;
+    gap : 20px;
+    font-size: 16px;
+}
+
+.navitem-container > div {
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.2s ease;
+}
+
+.navitem-container > div:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+.profileNavMenu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navprofile-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    max-width: 24px;
+    max-height: 24px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.navprofile-container > img {
+    object-fit: contain;
+}
+
+.profile-area {
+    margin-left: 240px; /* sidebar 너비만큼 밀어줌 */
+    width: 100%;
+    padding: 30px 100px 20px 100px;
+}
+
+.profile-top {
+    display: flex;
+    align-items: center;
+    gap: 80px;
+}
+
+.profile-img-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 165px;
+    height: 165px;
+    border-radius: 50%;
+    border: 3px solid lightgray;
+}
+
+.profile-img-container > img {
+    object-fit: contain;
+    width: 95%;
+    height: 95%;
+    border-radius: 50%;
+}
+
+.profile-top-context {
+    display: flex;
+    height: 165px;
+    flex-flow: column;
+    justify-content: space-between;
+}
+
+.context-top {
+    display: flex;
+    gap: 20px;
+}
+
+.username {
+    font-size: 20px;
+}
+
+.common-follow-btn {
+    border-radius: 5px;
+    border: none;
+    font-weight: bold;
+    font-size: 14px;
+    padding: 0 10px;
+    transition: 0.2s ease;
+    cursor: pointer;
+}
+
+.follow-btn {
+    color: white;
+    background-color: blue;
+}
+.follow-btn:hover {
+    background-color: navy;
+}
+
+/* 팔로잉 */
+.following-btn {
+    background-color: lightgray;
+    color: black;
+}
+.following-btn:hover {
+    background-color: gray;
+}
+
+.context-mid {
+    display: flex;
+    gap: 15px;
+}
+
+.content-name {
+    color:rgba(0, 0, 0, 0.5);
+}
+
+.content-qty {
+    color: black;
+    font-weight: bold;
+}
+
+.context-bottom {
+    display: flex;
+    flex-flow: column;
+}
+
+.name {
+    font-weight: bold;
+}
+
+.followers {
+    color: rgba(0, 0, 0, 0.5);
+}
+
+.follower-name {
+    color: black;
+}
+
+.post-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    max-width: 930px;
+    gap: 10px;
+}
+
+.post-img-container {
+    padding: 50px;
+    overflow: hidden;
+    max-width : 310px;
+    max-height: 410px;
+    aspect-ratio: 3/4;
+    box-sizing: border-box;
+}
+
+.post-img-container > img {
+    object-fit: contain;
+    width: 100%;
+    height: 100%;
+}

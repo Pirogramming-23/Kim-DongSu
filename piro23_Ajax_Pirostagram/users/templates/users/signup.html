@@ -1,0 +1,29 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'users/signup.css' %}">
+    <title>Pirostagram</title>
+</head>
+<body>
+    <div class="signup-wrapper">
+        <div class="signup-container">
+            <div class="signup-top">
+                <div class="img-container">
+                    <img src="{% static 'users/Logo.png' %}">
+                </div>
+                <h1>Pirostagram</h1>
+            </div>
+            <h2>SignUp</h2>
+            <form method="post" enctype="multipart/form-data" class="signup-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">가입하기</button>
+            </form>
+            <span>계정이 이미 있으신가요? <a href="{% url 'login' %}">로그인</a></span>
+        </div>
+    </div>           
+</body>
+</html>

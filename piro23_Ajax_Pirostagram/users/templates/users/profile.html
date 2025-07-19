@@ -1,0 +1,158 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'users/profile.css' %}">
+    <title>Pirostagram</title>
+</head>
+<body>
+    <nav class="sidebar">
+        <ul>
+            <div class="homelink-container">
+                <a href="{% url 'home' %}" class="homelink">Pirostagram</a>
+            </div>
+            <div class="navitem-container">
+                <div><a href="#">🏠&nbsp;&nbsp;&nbsp;홈</a></div>
+                <div><a href="#">🔍&nbsp;&nbsp;&nbsp;검색</a></div>
+                <div><a href="#">✉️&nbsp;&nbsp;&nbsp;메시지</a></div>
+                <div><a href="#">♥️&nbsp;&nbsp;&nbsp;알림</a></div>
+                <div><a href="#">➕&nbsp;&nbsp;&nbsp;만들기</a></div>
+                <div class="profileNavMenu">
+                    <div class="navprofile-container">
+                        {% if request.user.profile_image.name %}
+                            <img src="{{ request.user.profile_image.url }}" alt="프로필" class="nav-profile-image">
+                        {% else %}
+                            <img src="{% static 'images/default-profile.png' %}" alt="기본 프로필" class="nav-profile-image">
+                        {% endif %}
+                    </div>
+                    <a href="{% url 'profile' user.username %}">프로필</a>
+                </div>
+            </div>
+        </ul>
+    </nav>
+
+    <section class="profile-area">
+        <div class="profile-top">
+            <div class="profile-img-container">
+                <img src="{% if profile_user.profile_image.name %}
+                            {{ profile_user.profile_image.url }}
+                        {% else %}
+                            {% static 'images/default-profile.png' %}
+                        {% endif %}" alt="프로필 이미지">
+            </div>
+            <div class="profile-top-context">
+                <div class="context-top">
+                    <span class="username">{{profile_user.username}}</span>
+                    {% if is_me %}
+                        <button class="common-follow-btn profile-edit-btn">프로필 수정하기</button>
+                    {% else %}
+                        {% if is_following %}
+                            <button id="follow-btn" data-username="{{ profile_user.username }}" class="common-follow-btn following-btn">팔로잉</button>
+                        {% elif is_follower %}
+                            <button id="follow-btn" data-username="{{ profile_user.username }}" class="common-follow-btn follow-btn">맞팔로우</button>
+                        {% else %}
+                            <button id="follow-btn" data-username="{{ profile_user.username }}" class="common-follow-btn follow-btn">팔로우</button>
+                        {% endif %}
+                    {% endif %}
+                </div>
+                <div class="context-mid">
+                    <span class="content-name">게시물 <span class="content-qty">(게시물 수)</span></span>
+                    <div class="content-name">팔로워 <span class="content-qty">(팔로워 수)</span></div>
+                    <div class="content-name">팔로우 <span class="content-qty">(팔로우 수)</span></div>
+                </div>
+                <div class="context-bottom">
+                    <span class="name">{{profile_user.last_name}}{{profile_user.first_name}}</span>
+                    <span class="bio">{{profile_user.bio}}</span>
+                </div>
+                <div class="followers">
+                    <span class="follower-name">00</span>님, <span class="follower-name">00</span>님 외 00명이 팔로우합니다
+                </div>
+            </div>
+        </div>
+        <div class="post-grid">
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+            <div class="post-img-container">
+                <img src="{% static 'users/Logo.png' %}" alt="게시글 썸네일" class="post-thumbnail">
+            </div>
+        </div>
+    </section>
+</body>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const followBtn = document.querySelector('#follow-btn');
+
+        if (followBtn) {
+            followBtn.addEventListener('click', function () {
+                const username = this.dataset.username;
+
+                fetch(`/users/${username}/toggle_follow/`, {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': getCookie('csrftoken'),
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.is_following !== undefined && data.is_follower !== undefined) {
+                        if (data.is_following) {
+                            this.textContent = '팔로잉';
+                            this.className = 'common-follow-btn following-btn';
+                        } else if (data.is_follower) {
+                            this.textContent = '맞팔로우';
+                            this.className = 'common-follow-btn follow-btn';
+                        } else {
+                            this.textContent = '팔로우';
+                            this.className = 'common-follow-btn follow-btn';
+                        }
+                    }
+                });
+            });
+        }
+
+        // CSRF 토큰을 가져오는 함수
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.startsWith(name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+    });
+</script>
+</html>

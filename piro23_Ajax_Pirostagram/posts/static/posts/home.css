@@ -1,0 +1,180 @@
+body {
+    margin: 0;
+    font-family: sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: black;
+}
+
+a:visited {
+    text-decoration: none;
+    color: black;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 200px;
+    height: 100vh; /* 전체 높이 고정 */
+    padding: 20px;
+    box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    border-right: 1px solid lightgray;
+}
+
+.sidebar> ul {
+    list-style: none;
+    padding: 0;
+    display: flex;
+    flex-flow: column;
+    gap: 30px;
+}
+
+.homelink {
+    background: linear-gradient(90deg, yellowgreen, lightgreen);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 32px;
+    font-weight: bold;
+}
+
+.navitem-container {
+    display: flex;
+    flex-flow: column;
+    gap : 20px;
+    font-size: 16px;
+}
+
+.navitem-container > div {
+    padding: 10px;
+    border-radius: 10px;
+    transition: 0.2s ease;
+}
+
+.navitem-container > div:hover {
+    background-color: rgb(245, 245, 245);
+}
+
+.profileNavMenu {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.navprofile-container {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    max-width: 24px;
+    max-height: 24px;
+    overflow: hidden;
+    border-radius: 50%;
+}
+
+.navprofile-container > img {
+    object-fit: contain;
+}
+
+.content {
+    margin-left: 240px; /* sidebar 너비만큼 밀어줌 */
+    width: 100%;
+    padding: 20px 100px 20px 100px;
+    display: flex;
+}
+
+.content-left {
+    box-sizing: border-box;
+    width: 45%;
+    padding: 0 65px 0 65px;
+}
+
+.content-right {
+    width: 55%;
+    padding-left: 30px;
+}
+
+.story-container {
+    display: flex;
+    gap: 10px;
+    overflow-x: auto;
+}
+
+.story-item-container > span {
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    text-overflow: ellipsis;
+}
+
+.story-img-container {
+    width: 74px;
+    height: 74px;
+    padding: 3px;
+    border: 3px solid lightgray;
+    border-radius: 50%;
+}
+
+.story-item {
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    object-fit: contain;
+}
+
+.profile-container {
+    width: 320px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.profile-img-container {
+    width: 55px;
+    height: 55px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.profile-img-container > img {
+    object-fit: contain;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+}
+
+.profile-context {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.profile-context-left {
+    display: flex;
+    flex-flow: column;
+}
+
+.profile-username {
+    font-weight: bold;
+}
+
+.profile-name {
+    opacity: 0.5;
+}
+
+.account-change-link {
+    color: blue;
+}
+.account-change-link:hover {
+    text-decoration: underline;
+}
+.account-change-link:visited {
+    color: blue;
+}

@@ -1,0 +1,30 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'users/login.css' %}">
+    <title>Pirostagram</title>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-container">
+            <div class="login-top">
+                <div class="img-container">
+                    <img src="{% static 'users/Logo.png' %}">
+                </div>
+                <h1>Pirostagram</h1>
+            </div>
+            <p>로그인이 필요한 서비스입니다.<br>먼저 로그인을 진행해 주세요.</p>
+            <h2>Login</h2>
+            <form method="post" class="login-form">
+                {% csrf_token %}
+                {{ form.as_p }}
+                <button type="submit">로그인</button>
+            </form>
+            <span>아직 계정이 없으신가요? <a href="{%url 'signup'%}">회원가입</a></span>
+        </div>
+    </div>
+</body>
+</html>
